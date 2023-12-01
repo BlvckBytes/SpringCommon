@@ -1,18 +1,13 @@
 package me.blvckbytes.springcommon.validation
 
-import me.blvckbytes.springcommon.config.ApiFieldValidationError
 import kotlin.reflect.KProperty
 
-object NotNull {
+class NotNull(
+  override val field: KProperty<Any?>,
+  override val fieldValue: Any?
+): ApplicableValidator<Any> {
 
-  fun validate(property: KProperty<Any?>, value: Any?): ApiFieldValidationError? {
-    if (value != null)
-      return null
-
-    return ApiFieldValidationError(
-      property.name,
-      null,
-      "Must not be null"
-    )
+  override fun validate(): Boolean {
+    return fieldValue != null
   }
 }

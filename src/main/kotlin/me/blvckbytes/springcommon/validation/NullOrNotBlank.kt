@@ -1,21 +1,13 @@
 package me.blvckbytes.springcommon.validation
 
-import me.blvckbytes.springcommon.config.ApiFieldValidationError
 import kotlin.reflect.KProperty
 
-object NullOrNotBlank {
+class NullOrNotBlank(
+  override val field: KProperty<String?>,
+  override val fieldValue: String?
+): ApplicableValidator<String> {
 
-  fun validate(property: KProperty<String?>, value: String?): ApiFieldValidationError? {
-    if (value == null)
-      return null
-
-    if (value.isNotBlank())
-      return null
-
-    return ApiFieldValidationError(
-      property.name,
-      value,
-      "Must be either null or not blank"
-    )
+  override fun validate(): Boolean {
+    return fieldValue == null || fieldValue.isNotBlank()
   }
 }

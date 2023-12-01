@@ -1,25 +1,18 @@
 package me.blvckbytes.springcommon.validation
 
-import me.blvckbytes.springcommon.config.ApiFieldValidationError
 import kotlin.reflect.KProperty
 
-object CompareToConstant {
+class CompareToConstant<T : Comparable<T>>(
+  override val field: KProperty<T?>,
+  override val fieldValue: T?,
+  val constant: T,
+  val comparison: Comparison
+): ApplicableValidator<T> {
 
-  fun <T : Comparable<T>> validate(
-    self: KProperty<T?>, selfValue: T?,
-    constant: T,
-    comparison: Comparison
-  ): ApiFieldValidationError? {
-    if (selfValue == null)
-      return null
+  override fun validate(): Boolean {
+    if (fieldValue == null)
+      return true
 
-    if (comparison.apply(selfValue, constant))
-      return null
-
-    return ApiFieldValidationError(
-      self.name,
-      selfValue,
-      "Must be ${comparison.messagePart} $constant"
-    )
+    return comparison.apply(fieldValue, constant)
   }
 }

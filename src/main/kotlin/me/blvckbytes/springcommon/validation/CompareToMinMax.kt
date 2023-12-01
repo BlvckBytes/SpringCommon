@@ -1,24 +1,18 @@
 package me.blvckbytes.springcommon.validation
 
-import me.blvckbytes.springcommon.config.ApiFieldValidationError
 import kotlin.reflect.KProperty
 
-object CompareToMinMax {
+class CompareToMinMax<T : Comparable<T>>(
+  override val field: KProperty<T?>,
+  override val fieldValue: T?,
+  val min: T,
+  val max: T
+): ApplicableValidator<T> {
 
-  fun <T : Comparable<T>> validate(
-    self: KProperty<T?>, selfValue: T?,
-    min: T, max: T
-  ): ApiFieldValidationError? {
-    if (selfValue == null)
-      return null
+  override fun validate(): Boolean {
+    if (fieldValue == null)
+      return true
 
-    if (selfValue >= min && selfValue <= max)
-      return null
-
-    return ApiFieldValidationError(
-      self.name,
-      selfValue,
-      "Must be between $min and $max"
-    )
+    return fieldValue >= min && fieldValue <= max
   }
 }
