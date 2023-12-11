@@ -6,12 +6,10 @@ class AbsentableNotNull<T : Any> private constructor(
 ): Absentable {
 
   companion object {
+    val ABSENT = AbsentableNotNull(null, true)
+
     fun <T : Any> of(value: T): AbsentableNotNull<T> {
       return AbsentableNotNull(value, false)
-    }
-
-    fun <T: Any> absent(): AbsentableNotNull<T> {
-      return AbsentableNotNull(null, true)
     }
   }
 

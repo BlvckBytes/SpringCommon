@@ -17,7 +17,7 @@ class AbsentableNullableJsonDeserializer(
   }
 
   override fun getAbsentValue(ctxt: DeserializationContext?): Any {
-    return AbsentableNullable.absent()
+    return AbsentableNullable.ABSENT
   }
 
   override fun handledType(): Class<*> {

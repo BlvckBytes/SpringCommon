@@ -6,18 +6,24 @@ class AbsentableNullable<T : Any> private constructor(
 ) : Absentable {
 
   companion object {
-    fun <T : Any> of(value: T?): AbsentableNullable<T> {
-      return AbsentableNullable(value, false)
-    }
+    val ABSENT = AbsentableNullable(null, true)
+    val NULL = AbsentableNullable(null, false)
 
-    fun absent(): AbsentableNullable<*> {
-      return AbsentableNullable(null, true)
+    fun <T : Any> of(value: T?): AbsentableNullable<T> {
+      if (value == null) {
+        @Suppress("UNCHECKED_CAST")
+        return NULL as AbsentableNullable<T>
+      }
+
+      return AbsentableNullable(value, false)
     }
   }
 
   fun asNotNull(): AbsentableNotNull<T> {
-    if (absent)
-      return AbsentableNotNull.absent()
+    if (absent) {
+      @Suppress("UNCHECKED_CAST")
+      return AbsentableNotNull.ABSENT as AbsentableNotNull<T>
+    }
 
     return AbsentableNotNull.of(
       value ?: throw IllegalStateException("Internal value was null")
